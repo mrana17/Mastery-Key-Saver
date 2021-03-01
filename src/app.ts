@@ -1,23 +1,37 @@
-console.log("Generate your Mastery Key Password 🔐");
+import prompts from "prompts";
 
-const [command] = process.argv.slice(2);
+const run = async () => {
+  console.log("Generate your Mastery Key Password 🔐");
 
-if (command === "get") {
-  console.log("Hi Mark");
-}
-if (command === "set") {
-  console.log("Bye Mark");
-}
+  const [command] = process.argv.slice(2);
 
-// const get = console.log("Hi Mark");
-// const set = console.log("Bye Mark");
+  if (command === "get") {
+    console.log("Hi Mark");
+  }
+  if (command === "set") {
+    console.log("Bye Mark");
+  }
 
-// function GetSet() {
-//   if (get) {
-//     console.log("Hi Mark");
-//   }
-//   if (set) {
-//     console.log("Bye Mark");
-//   }
-// }
-// GetSet();
+  const questions = await prompts([
+    {
+      type: "text",
+      name: "username",
+      message: "What is your username?",
+    },
+    {
+      type: "number",
+      name: "age",
+      message: "How old are you?",
+    },
+    {
+      type: "toggle",
+      name: "value",
+      message: "Tell me your Password or I'll tell you?!",
+      initial: true,
+      active: "write",
+      inactive: "read",
+    },
+  ]);
+};
+
+run();
