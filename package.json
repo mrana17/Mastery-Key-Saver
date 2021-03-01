@@ -1,0 +1,27 @@
+{
+  "name": "mastery-key-saver",
+  "version": "1.0.0",
+  "description": "Password Manager for Node",
+  "private": true,
+  "main": "dist/app.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrana17/Mastery-Key-Saver.git"
+  },
+  "author": "Mudi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mrana17/Mastery-Key-Saver/issues"
+  },
+  "homepage": "https://github.com/mrana17/Mastery-Key-Saver#readme",
+  "devDependencies": {
+    "@types/node": "^14.14.31",
+    "typescript": "^4.2.2"
+  }
+}
