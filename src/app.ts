@@ -1,4 +1,7 @@
+import chalk from "chalk";
 import prompts from "prompts";
+
+console.log(chalk.blue("hello world"));
 
 const run = async () => {
   console.log("Generate your Mastery Key Password 🔐");
