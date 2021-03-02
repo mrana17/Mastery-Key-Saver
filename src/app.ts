@@ -1,40 +1,24 @@
-import chalk from "chalk";
-import prompts from "prompts";
-
-console.log(chalk.blue("hello world"));
+import { handleGetPassword, handleSetPassword, hasAccess } from "./command";
+import { printNoAccess, printWelcomeMessage } from "./messages";
+import { askForAction, askForCredentials } from "./questions";
 
 const run = async () => {
-  console.log("Generate your Mastery Key Password 🔐");
-
-  const [command] = process.argv.slice(2);
-
-  if (command === "get") {
-    console.log("Hi Mark");
+  printWelcomeMessage();
+  const credentials = await askForCredentials();
+  if (!hasAccess(credentials.masterPassword)) {
+    printNoAccess();
+    run();
+    return;
   }
-  if (command === "set") {
-    console.log("Bye Mark");
+  const action = await askForAction();
+  switch (action.command) {
+    case "set":
+      handleSetPassword(action.passwordName);
+      break;
+    case "get":
+      handleGetPassword(action.passwordName);
+      break;
   }
-
-  const questions = await prompts([
-    {
-      type: "text",
-      name: "username",
-      message: "What is your username?",
-    },
-    {
-      type: "number",
-      name: "age",
-      message: "How old are you?",
-    },
-    {
-      type: "toggle",
-      name: "value",
-      message: "Tell me your Password or I'll tell you?!",
-      initial: true,
-      active: "write",
-      inactive: "read",
-    },
-  ]);
 };
 
 run();
