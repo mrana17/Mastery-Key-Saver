@@ -1,7 +1,15 @@
 import { handleGetPassword, handleSetPassword, hasAccess } from "./command";
 import { printNoAccess, printWelcomeMessage } from "./messages";
 import { askForAction, askForCredentials } from "./questions";
-import { closeDB, getCollection, connectDB } from "./db";
+import {
+  closeDB,
+  getCollection,
+  connectDB,
+  createPasswordDoc,
+  readPasswordDoc,
+  deletePasswordDoc,
+  updatePasswordDoc,
+} from "./db";
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
 dotenv.config();
@@ -21,7 +29,16 @@ const run = async () => {
 
   try {
     await connectDB(url, "Mastery-Key-Saver-Mudi");
-    await getCollection("passwords");
+    await createPasswordDoc({
+      name: "ABC",
+      value: "1111",
+    });
+    await readPasswordDoc("ABC");
+    await updatePasswordDoc("ABC", { name: "CBA", value: "1111" }),
+      await deletePasswordDoc({
+        name: "ABC",
+        value: "1111",
+      });
     await closeDB();
   } catch (error) {
     console.error(error);
