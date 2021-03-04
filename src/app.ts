@@ -8,7 +8,7 @@ import {
   createPasswordDoc,
   readPasswordDoc,
   deletePasswordDoc,
-  updatePasswordDoc,
+  updatePasswordValue,
 } from "./db";
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
@@ -34,11 +34,8 @@ const run = async () => {
       value: "1111",
     });
     await readPasswordDoc("ABC");
-    await updatePasswordDoc("ABC", { name: "CBA", value: "1111" }),
-      await deletePasswordDoc({
-        name: "ABC",
-        value: "1111",
-      });
+    await updatePasswordValue("ABC", "2222");
+    await deletePasswordDoc("ABC");
     await closeDB();
   } catch (error) {
     console.error(error);
@@ -52,14 +49,14 @@ const run = async () => {
     return;
   }
   const action = await askForAction();
-  // switch (action.command) {
-  //   case "set":
-  //     handleSetPassword(action.passwordName);
-  //     break;
-  //   case "get":
-  //     handleGetPassword(action.passwordName);
-  //     break;
-  // }
+  switch (action.command) {
+    case "set":
+      handleSetPassword(action.passwordName);
+      break;
+    case "get":
+      handleGetPassword(action.passwordName);
+      break;
+  }
   const commandFunction = commandToFunction[action.command];
   commandFunction(action.passwordName);
 };

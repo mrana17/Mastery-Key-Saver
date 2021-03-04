@@ -1,5 +1,4 @@
 import { Collection, Db, MongoClient } from "mongodb";
-import { type } from "os";
 
 export type PasswordDoc = {
   name: string;
@@ -10,7 +9,7 @@ let db: Db = null;
 
 export async function connectDB(url: string, dbName: string) {
   client = await MongoClient.connect(url, { useUnifiedTopology: true });
-  const db = client.db(dbName);
+  db = client.db(dbName);
 }
 
 export function getCollection<T>(collectionName: string): Collection<T> {
@@ -33,16 +32,29 @@ export async function readPasswordDoc(passwordName: string) {
 
 export async function updatePasswordDoc(
   passwordName: string,
-  passwordDoc: PasswordDoc
-) {
+  fieldsToUpdate: Partial<PasswordDoc>
+): Promise<Boolean> {
   const passwordCollection = await getCollection<PasswordDoc>("passwords");
-  return await passwordCollection.updateOne(
-    { passwordName },
-    { $set: passwordDoc }
+  const updateResult = await passwordCollection.updateOne(
+    { name: passwordName },
+    { $set: fieldsToUpdate }
   );
+  return updateResult.modifiedCount >= 1;
 }
 
-export async function deletePasswordDoc(PasswordDoc: PasswordDoc) {
+export async function updatePasswordValue(
+  passwordName: string,
+  newPasswordValue: string
+): Promise<Boolean> {
+  return await updatePasswordDoc(passwordName, { value: newPasswordValue });
+}
+
+export async function deletePasswordDoc(
+  passwordName: string
+): Promise<Boolean> {
   const passwordCollection = await getCollection<PasswordDoc>("passwords");
-  return await passwordCollection.deleteOne(PasswordDoc);
+  const deleteResult = await passwordCollection.deleteOne({
+    name: passwordName,
+  });
+  return deleteResult.deletedCount >= 1;
 }
