@@ -1,4 +1,5 @@
 import { Collection, Db, MongoClient } from "mongodb";
+import CryptoJS from "crypto-js";
 
 export type PasswordDoc = {
   name: string;
@@ -20,14 +21,27 @@ export function closeDB() {
   client.close();
 }
 
-export async function createPasswordDoc(PasswordDoc: PasswordDoc) {
+export async function createPasswordDoc(passwordDoc: PasswordDoc) {
   const passwordCollection = await getCollection<PasswordDoc>("passwords");
-  return await passwordCollection.insertOne(PasswordDoc);
+  const encryptedPasswordDoc = {
+    name: passwordDoc.name,
+    value: encryptPassword(passwordDoc.value),
+  };
+  return await passwordCollection.insertOne(encryptedPasswordDoc);
 }
 
-export async function readPasswordDoc(passwordName: string) {
+export async function readPasswordDoc(
+  passwordName: string
+): Promise<PasswordDoc> {
   const passwordCollection = await getCollection<PasswordDoc>("passwords");
-  return await passwordCollection.findOne({ name: passwordName });
+  const passwordDoc = await passwordCollection.findOne({ name: passwordName });
+  if (!passwordDoc) {
+    return null;
+  }
+  return {
+    name: passwordDoc.name,
+    value: decryptPassword(passwordDoc.value),
+  };
 }
 
 export async function updatePasswordDoc(
@@ -57,4 +71,19 @@ export async function deletePasswordDoc(
     name: passwordName,
   });
   return deleteResult.deletedCount >= 1;
+}
+
+export function encryptPassword(password: string) {
+  return CryptoJS.AES.encrypt(
+    password,
+    process.env.CRYPTO_MASTER_PASSWORD
+  ).toString();
+}
+
+export function decryptPassword(cipherText: string) {
+  const bytes = CryptoJS.AES.decrypt(
+    cipherText,
+    process.env.CRYPTO_MASTER_PASSWORD
+  );
+  return bytes.toString(CryptoJS.enc.Utf8);
 }

@@ -50,3 +50,11 @@ export const askForPasswordValue = async (): Promise<string> => {
   });
   return response.passwordValue;
 };
+export const askForPasswordName = async (): Promise<string> => {
+  const response = await prompts({
+    type: "text",
+    name: "nameForPassword",
+    message: "What is the name of your Password?",
+  });
+  return response.nameForPassword;
+};

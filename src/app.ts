@@ -26,39 +26,38 @@ const commandToFunction: CommandToFunction = {
 
 const run = async () => {
   const url = process.env.MONGODB_URL;
-
+  printWelcomeMessage();
   try {
     await connectDB(url, "Mastery-Key-Saver-Mudi");
-    await createPasswordDoc({
-      name: "ABC",
-      value: "1111",
-    });
-    await readPasswordDoc("ABC");
-    await updatePasswordValue("ABC", "2222");
-    await deletePasswordDoc("ABC");
+    // await createPasswordDoc({
+    //   name: "ABC",
+    //   value: "1111",
+    // });
+    // await readPasswordDoc("ABC");
+    // await updatePasswordValue("ABC", "2222");
+    // await deletePasswordDoc("ABC");
+
+    const credentials = await askForCredentials();
+    if (!hasAccess(credentials.masterPassword)) {
+      printNoAccess();
+      run();
+      return;
+    }
+    const action = await askForAction();
+    // switch (action.command) {
+    //   case "set":
+    //     handleSetPassword(action.passwordName);
+    //     break;
+    //   case "get":
+    //     handleGetPassword(action.passwordName);
+    //     break;
+    // }
+    const commandFunction = commandToFunction[action.command];
+    await commandFunction(action.passwordName);
     await closeDB();
   } catch (error) {
     console.error(error);
   }
-
-  printWelcomeMessage();
-  const credentials = await askForCredentials();
-  if (!hasAccess(credentials.masterPassword)) {
-    printNoAccess();
-    run();
-    return;
-  }
-  const action = await askForAction();
-  switch (action.command) {
-    case "set":
-      handleSetPassword(action.passwordName);
-      break;
-    case "get":
-      handleGetPassword(action.passwordName);
-      break;
-  }
-  const commandFunction = commandToFunction[action.command];
-  commandFunction(action.passwordName);
 };
 
 run();
