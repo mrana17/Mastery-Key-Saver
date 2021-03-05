@@ -1,7 +1,14 @@
 import { printPassword, printPasswordSet } from "./messages";
 import { askForPasswordValue, askForPasswordName } from "./questions";
 import dotenv from "dotenv";
-import { closeDB, connectDB, createPasswordDoc, readPasswordDoc } from "./db";
+import {
+  closeDB,
+  connectDB,
+  createPasswordDoc,
+  readPasswordDoc,
+  updatePasswordDoc,
+  updatePasswordValue,
+} from "./db";
 dotenv.config();
 
 export const hasAccess = (masterPassword: string): boolean =>
@@ -12,10 +19,15 @@ export const handleSetPassword = async (
 ): Promise<void> => {
   // const nameForPassword = await askForPasswordName();
   const passwordValue = await askForPasswordValue();
-  await createPasswordDoc({
-    name: passwordName,
-    value: passwordValue,
-  });
+  const passwordDoc = await readPasswordDoc(passwordName);
+  if (passwordDoc) {
+    await updatePasswordValue(passwordName, passwordValue);
+  } else {
+    await createPasswordDoc({
+      name: passwordName,
+      value: passwordValue,
+    });
+  }
   printPasswordSet(passwordName);
 };
 
