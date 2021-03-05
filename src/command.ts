@@ -10,10 +10,10 @@ export const hasAccess = (masterPassword: string): boolean =>
 export const handleSetPassword = async (
   passwordName: string
 ): Promise<void> => {
-  const nameForPassword = await askForPasswordName();
+  // const nameForPassword = await askForPasswordName();
   const passwordValue = await askForPasswordValue();
   await createPasswordDoc({
-    name: nameForPassword,
+    name: passwordName,
     value: passwordValue,
   });
   printPasswordSet(passwordName);
