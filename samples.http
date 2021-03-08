@@ -1,0 +1,29 @@
+### GET a password by name
+GET http://localhost:3333/api/passwords/home
+
+### GET an unknown password by name
+GET http://localhost:3333/api/passwords/nadkjnfda
+
+### GET an unknown resource
+GET http://localhost:3333/api/schokobons
+
+### POST a new password
+POST http://localhost:3333/api/passwords
+Content-Type: application/json
+
+{
+    "name": "Wifi",
+    "value": "abcdefgh"
+}
+
+### DELETE a resource
+DELETE  http://localhost:3333/api/passwords/home
+
+### PATCH a password
+PATCH http://localhost:3333/api/passwords/home
+Content-Type: application/json
+
+{
+    "name": "Wifi",
+    "value": "abcdefghijk"
+}
