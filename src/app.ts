@@ -1,16 +1,7 @@
 import { handleGetPassword, handleSetPassword, hasAccess } from "./command";
 import { printNoAccess, printWelcomeMessage } from "./messages";
 import { askForAction, askForCredentials } from "./questions";
-import {
-  closeDB,
-  getCollection,
-  connectDB,
-  createPasswordDoc,
-  readPasswordDoc,
-  deletePasswordDoc,
-  updatePasswordValue,
-} from "./db";
-import { MongoClient } from "mongodb";
+import { closeDB, connectDB } from "./db";
 import dotenv from "dotenv";
 dotenv.config();
 

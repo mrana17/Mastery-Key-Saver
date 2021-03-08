@@ -21,6 +21,7 @@ export const handleSetPassword = async (
   const passwordValue = await askForPasswordValue();
   const passwordDoc = await readPasswordDoc(passwordName);
   if (passwordDoc) {
+    console.log("Password already exists, please update your password!");
     await updatePasswordValue(passwordName, passwordValue);
   } else {
     await createPasswordDoc({
